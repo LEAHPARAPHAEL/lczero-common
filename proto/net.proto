@@ -78,6 +78,51 @@ message Weights {
     optional Layer ln2_betas = 9;
   }
 
+  message Conv1Block {
+    optional Layer weights = 1;
+    optional Layer biases = 2;
+    optional Layer bn_means = 3;
+    optional Layer bn_stddivs = 4;
+    optional Layer bn_gammas = 5;
+    optional Layer bn_betas = 6;
+  }
+
+  message DepthwiseConvBlock {
+    optional Layer weights = 1;
+    optional Layer biases = 2;
+    optional Layer bn_means = 3;
+    optional Layer bn_stddivs = 4;
+    optional Layer bn_gammas = 5;
+    optional Layer bn_betas = 6;
+  }
+
+  message LayerNormalization {
+    optional Layer ln_gammas = 1;
+    optional Layer ln_betas = 2;
+  }
+
+  message BatchNormalization {
+    optional Layer bn_means = 1;
+    optional Layer bn_stddivs = 2;
+    optional Layer bn_gammas = 3;
+    optional Layer bn_betas = 4;
+  }
+
+  message Bottleneck {
+    // First convolution
+    optional Conv1Block conv1 = 1;
+
+    // Depth wise (or chess depth wise) convolution
+    optional DepthwiseConvBlock d_conv = 2;
+
+    // Second convolution
+    optional Conv1Block conv2 = 3;
+
+    // Squeeze excitation
+    optional SEunit se = 4;
+  }
+
+
   message MHA {
     optional Layer q_w = 1;
     optional Layer q_b = 2;
@@ -187,6 +232,9 @@ message Weights {
   optional Layer ip_emb_ln_gammas = 39;
   optional Layer ip_emb_ln_betas = 40;
 
+  repeated Bottleneck bottleneck = 46;
+
+  optional Conv1Block conv1block = 47;
 
 
   // Input gating (NETWORK_ATTENTIONBODY_WITH_HEADFORMAT).
